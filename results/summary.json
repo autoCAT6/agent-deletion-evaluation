@@ -1,0 +1,594 @@
+{
+  "all_expected_observations": true,
+  "case_count": 14,
+  "cases_sha256": "e95591398f417f77f3ca7ffdf983dcb17fe5f342c4809b59053e5d0b6708efe2",
+  "fixture": "proposed deterministic deletion evaluation v0.1",
+  "python": "3.14.3",
+  "results": [
+    {
+      "all_expected_observations": true,
+      "case": "01-no-deletion-detection-control",
+      "checks": {
+        "applied_deletes": true,
+        "derived_query_visible": true,
+        "inspected_storage_clean": true,
+        "main_query_visible": true,
+        "query_clean": true,
+        "receipt_completed": true,
+        "target_present_in_both_initial_stores": true,
+        "unrelated_subject_survives_every_observation": true
+      },
+      "description": "Seed both stores but issue no deletion; observation must detect the target.",
+      "final": {
+        "applied_deletes": 0,
+        "audit_retains_canary": false,
+        "derived_query_visible": true,
+        "inspected_storage_clean": false,
+        "logical_tick": 6,
+        "main_query_visible": true,
+        "outbox_retains_canary": false,
+        "pending_outbox": 0,
+        "query_clean": false,
+        "raw_sqlite_files_containing_canary": [
+          "agent_a.sqlite",
+          "agent_b.sqlite"
+        ],
+        "receipt_completed": false,
+        "request_statuses": [],
+        "snapshot_query_visible": {
+          "snapshot_a.sqlite": false,
+          "snapshot_b.sqlite": false
+        },
+        "snapshot_retains_canary": false,
+        "stage": "deadline_inspection",
+        "tombstones": 0,
+        "unrelated_subject_preserved": true
+      }
+    },
+    {
+      "all_expected_observations": true,
+      "case": "02-premature-completion",
+      "checks": {
+        "applied_deletes": true,
+        "derived_query_visible": true,
+        "inspected_storage_clean": true,
+        "main_query_visible": true,
+        "pending_outbox": true,
+        "query_clean": true,
+        "receipt_completed": true,
+        "target_present_in_both_initial_stores": true,
+        "unrelated_subject_survives_every_observation": true
+      },
+      "description": "Source declares completion before the downstream deletion is delivered.",
+      "final": {
+        "applied_deletes": 0,
+        "audit_retains_canary": false,
+        "derived_query_visible": true,
+        "inspected_storage_clean": false,
+        "logical_tick": 6,
+        "main_query_visible": false,
+        "outbox_retains_canary": false,
+        "pending_outbox": 1,
+        "query_clean": false,
+        "raw_sqlite_files_containing_canary": [
+          "agent_b.sqlite"
+        ],
+        "receipt_completed": true,
+        "request_statuses": [
+          "completed"
+        ],
+        "snapshot_query_visible": {
+          "snapshot_a.sqlite": false,
+          "snapshot_b.sqlite": false
+        },
+        "snapshot_retains_canary": false,
+        "stage": "deadline_inspection",
+        "tombstones": 0,
+        "unrelated_subject_preserved": true
+      }
+    },
+    {
+      "all_expected_observations": true,
+      "case": "03-pending-delivery-visible",
+      "checks": {
+        "applied_deletes": true,
+        "derived_query_visible": true,
+        "inspected_storage_clean": true,
+        "main_query_visible": true,
+        "pending_outbox": true,
+        "query_clean": true,
+        "receipt_completed": true,
+        "target_present_in_both_initial_stores": true,
+        "unrelated_subject_survives_every_observation": true
+      },
+      "description": "Accepted request remains pending when downstream delivery is absent.",
+      "final": {
+        "applied_deletes": 0,
+        "audit_retains_canary": false,
+        "derived_query_visible": true,
+        "inspected_storage_clean": false,
+        "logical_tick": 6,
+        "main_query_visible": false,
+        "outbox_retains_canary": false,
+        "pending_outbox": 1,
+        "query_clean": false,
+        "raw_sqlite_files_containing_canary": [
+          "agent_b.sqlite"
+        ],
+        "receipt_completed": false,
+        "request_statuses": [
+          "accepted"
+        ],
+        "snapshot_query_visible": {
+          "snapshot_a.sqlite": false,
+          "snapshot_b.sqlite": false
+        },
+        "snapshot_retains_canary": false,
+        "stage": "deadline_inspection",
+        "tombstones": 0,
+        "unrelated_subject_preserved": true
+      }
+    },
+    {
+      "all_expected_observations": true,
+      "case": "04-propagation-and-retention-complete",
+      "checks": {
+        "applied_deletes": true,
+        "inspected_storage_clean": true,
+        "observation:after_delivery_2": true,
+        "observation:after_receipt": true,
+        "pending_outbox": true,
+        "query_clean": true,
+        "receipt_completed": true,
+        "target_present_in_both_initial_stores": true,
+        "tombstones": true,
+        "unrelated_subject_survives_every_observation": true
+      },
+      "description": "Apply downstream deletion, acknowledge, and expire snapshots at the declared inspection tick.",
+      "final": {
+        "applied_deletes": 1,
+        "audit_retains_canary": false,
+        "derived_query_visible": false,
+        "inspected_storage_clean": true,
+        "logical_tick": 6,
+        "main_query_visible": false,
+        "outbox_retains_canary": false,
+        "pending_outbox": 0,
+        "query_clean": true,
+        "raw_sqlite_files_containing_canary": [],
+        "receipt_completed": true,
+        "request_statuses": [
+          "completed"
+        ],
+        "snapshot_query_visible": {
+          "snapshot_a.sqlite": false,
+          "snapshot_b.sqlite": false
+        },
+        "snapshot_retains_canary": false,
+        "stage": "deadline_inspection",
+        "tombstones": 1,
+        "unrelated_subject_preserved": true
+      }
+    },
+    {
+      "all_expected_observations": true,
+      "case": "05-ack-loss-and-retry",
+      "checks": {
+        "action_count:delivery_ack_lost": true,
+        "action_count:delivery_result": true,
+        "action_decisions:delivery_result": true,
+        "applied_deletes": true,
+        "inspected_storage_clean": true,
+        "observation:after_delivery_2": true,
+        "pending_outbox": true,
+        "query_clean": true,
+        "receipt_completed": true,
+        "target_present_in_both_initial_stores": true,
+        "tombstones": true,
+        "unrelated_subject_survives_every_observation": true
+      },
+      "description": "Derived deletion commits, delivery acknowledgement is lost, and the queued event is retried.",
+      "final": {
+        "applied_deletes": 1,
+        "audit_retains_canary": false,
+        "derived_query_visible": false,
+        "inspected_storage_clean": true,
+        "logical_tick": 6,
+        "main_query_visible": false,
+        "outbox_retains_canary": false,
+        "pending_outbox": 0,
+        "query_clean": true,
+        "raw_sqlite_files_containing_canary": [],
+        "receipt_completed": true,
+        "request_statuses": [
+          "completed"
+        ],
+        "snapshot_query_visible": {
+          "snapshot_a.sqlite": false,
+          "snapshot_b.sqlite": false
+        },
+        "snapshot_retains_canary": false,
+        "stage": "deadline_inspection",
+        "tombstones": 1,
+        "unrelated_subject_preserved": true
+      }
+    },
+    {
+      "all_expected_observations": true,
+      "case": "06-duplicate-request-and-delivery",
+      "checks": {
+        "action_count:delete_retried": true,
+        "action_count:delivery_result": true,
+        "action_count:duplicate_delivery_result": true,
+        "action_decisions:duplicate_delivery_result": true,
+        "applied_deletes": true,
+        "inspected_storage_clean": true,
+        "query_clean": true,
+        "receipt_completed": true,
+        "target_present_in_both_initial_stores": true,
+        "tombstones": true,
+        "unrelated_subject_survives_every_observation": true
+      },
+      "description": "Retry the same request and delivery without adding another deletion application.",
+      "final": {
+        "applied_deletes": 1,
+        "audit_retains_canary": false,
+        "derived_query_visible": false,
+        "inspected_storage_clean": true,
+        "logical_tick": 6,
+        "main_query_visible": false,
+        "outbox_retains_canary": false,
+        "pending_outbox": 0,
+        "query_clean": true,
+        "raw_sqlite_files_containing_canary": [],
+        "receipt_completed": true,
+        "request_statuses": [
+          "completed"
+        ],
+        "snapshot_query_visible": {
+          "snapshot_a.sqlite": false,
+          "snapshot_b.sqlite": false
+        },
+        "snapshot_retains_canary": false,
+        "stage": "deadline_inspection",
+        "tombstones": 1,
+        "unrelated_subject_preserved": true
+      }
+    },
+    {
+      "all_expected_observations": true,
+      "case": "07-stale-replay-without-tombstone",
+      "checks": {
+        "action_decisions:identical_upsert_replay": true,
+        "action_decisions:new_id_stale_upsert_replay": true,
+        "applied_deletes": true,
+        "derived_query_visible": true,
+        "inspected_storage_clean": true,
+        "main_query_visible": true,
+        "observation:after_delivery_3": true,
+        "observation:after_stale_replay": true,
+        "query_clean": true,
+        "receipt_completed": true,
+        "target_present_in_both_initial_stores": true,
+        "tombstones": true,
+        "unrelated_subject_survives_every_observation": true
+      },
+      "description": "A delayed version-1 copy with a new event ID restores the deleted derived value.",
+      "final": {
+        "applied_deletes": 1,
+        "audit_retains_canary": false,
+        "derived_query_visible": true,
+        "inspected_storage_clean": false,
+        "logical_tick": 6,
+        "main_query_visible": false,
+        "outbox_retains_canary": false,
+        "pending_outbox": 0,
+        "query_clean": false,
+        "raw_sqlite_files_containing_canary": [
+          "agent_b.sqlite"
+        ],
+        "receipt_completed": true,
+        "request_statuses": [
+          "completed"
+        ],
+        "snapshot_query_visible": {
+          "snapshot_a.sqlite": false,
+          "snapshot_b.sqlite": false
+        },
+        "snapshot_retains_canary": false,
+        "stage": "deadline_inspection",
+        "tombstones": 0,
+        "unrelated_subject_preserved": true
+      }
+    },
+    {
+      "all_expected_observations": true,
+      "case": "08-stale-replay-with-tombstone",
+      "checks": {
+        "action_count:identical_upsert_replay": true,
+        "action_count:new_id_stale_upsert_replay": true,
+        "action_decisions:identical_upsert_replay": true,
+        "action_decisions:new_id_stale_upsert_replay": true,
+        "applied_deletes": true,
+        "inspected_storage_clean": true,
+        "query_clean": true,
+        "receipt_completed": true,
+        "target_present_in_both_initial_stores": true,
+        "tombstones": true,
+        "unrelated_subject_survives_every_observation": true
+      },
+      "description": "The deletion revision rejects an old copy even when it has a new event ID.",
+      "final": {
+        "applied_deletes": 1,
+        "audit_retains_canary": false,
+        "derived_query_visible": false,
+        "inspected_storage_clean": true,
+        "logical_tick": 6,
+        "main_query_visible": false,
+        "outbox_retains_canary": false,
+        "pending_outbox": 0,
+        "query_clean": true,
+        "raw_sqlite_files_containing_canary": [],
+        "receipt_completed": true,
+        "request_statuses": [
+          "completed"
+        ],
+        "snapshot_query_visible": {
+          "snapshot_a.sqlite": false,
+          "snapshot_b.sqlite": false
+        },
+        "snapshot_retains_canary": false,
+        "stage": "deadline_inspection",
+        "tombstones": 1,
+        "unrelated_subject_preserved": true
+      }
+    },
+    {
+      "all_expected_observations": true,
+      "case": "09-snapshot-retained-past-deadline",
+      "checks": {
+        "audit_retains_canary": true,
+        "inspected_storage_clean": true,
+        "query_clean": true,
+        "receipt_completed": true,
+        "snapshot_retains_canary": true,
+        "target_present_in_both_initial_stores": true,
+        "unrelated_subject_survives_every_observation": true
+      },
+      "description": "Live queries are clean but both persisted snapshots remain readable past the fixture deadline.",
+      "final": {
+        "applied_deletes": 1,
+        "audit_retains_canary": false,
+        "derived_query_visible": false,
+        "inspected_storage_clean": false,
+        "logical_tick": 6,
+        "main_query_visible": false,
+        "outbox_retains_canary": false,
+        "pending_outbox": 0,
+        "query_clean": true,
+        "raw_sqlite_files_containing_canary": [
+          "snapshot_a.sqlite",
+          "snapshot_b.sqlite"
+        ],
+        "receipt_completed": true,
+        "request_statuses": [
+          "completed"
+        ],
+        "snapshot_query_visible": {
+          "snapshot_a.sqlite": true,
+          "snapshot_b.sqlite": true
+        },
+        "snapshot_retains_canary": true,
+        "stage": "deadline_inspection",
+        "tombstones": 1,
+        "unrelated_subject_preserved": true
+      }
+    },
+    {
+      "all_expected_observations": true,
+      "case": "10-payload-in-audit-log",
+      "checks": {
+        "audit_retains_canary": true,
+        "inspected_storage_clean": true,
+        "query_clean": true,
+        "receipt_completed": true,
+        "snapshot_retains_canary": true,
+        "target_present_in_both_initial_stores": true,
+        "unrelated_subject_survives_every_observation": true
+      },
+      "description": "Live queries and snapshots are clean but an append-only audit entry still contains the target payload.",
+      "final": {
+        "applied_deletes": 1,
+        "audit_retains_canary": true,
+        "derived_query_visible": false,
+        "inspected_storage_clean": false,
+        "logical_tick": 6,
+        "main_query_visible": false,
+        "outbox_retains_canary": false,
+        "pending_outbox": 0,
+        "query_clean": true,
+        "raw_sqlite_files_containing_canary": [],
+        "receipt_completed": true,
+        "request_statuses": [
+          "completed"
+        ],
+        "snapshot_query_visible": {
+          "snapshot_a.sqlite": false,
+          "snapshot_b.sqlite": false
+        },
+        "snapshot_retains_canary": false,
+        "stage": "deadline_inspection",
+        "tombstones": 1,
+        "unrelated_subject_preserved": true
+      }
+    },
+    {
+      "all_expected_observations": true,
+      "case": "11-unguarded-snapshot-restore",
+      "checks": {
+        "applied_deletes": true,
+        "derived_query_visible": true,
+        "inspected_storage_clean": true,
+        "main_query_visible": true,
+        "query_clean": true,
+        "receipt_completed": true,
+        "target_present_in_both_initial_stores": true,
+        "tombstones": true,
+        "unrelated_subject_survives_every_observation": true
+      },
+      "description": "Restoring a derived snapshot also rolls back its tombstone and exposes the old record.",
+      "final": {
+        "applied_deletes": 0,
+        "audit_retains_canary": false,
+        "derived_query_visible": true,
+        "inspected_storage_clean": false,
+        "logical_tick": 6,
+        "main_query_visible": false,
+        "outbox_retains_canary": false,
+        "pending_outbox": 0,
+        "query_clean": false,
+        "raw_sqlite_files_containing_canary": [
+          "agent_b.sqlite"
+        ],
+        "receipt_completed": true,
+        "request_statuses": [
+          "completed"
+        ],
+        "snapshot_query_visible": {
+          "snapshot_a.sqlite": false,
+          "snapshot_b.sqlite": false
+        },
+        "snapshot_retains_canary": false,
+        "stage": "deadline_inspection",
+        "tombstones": 0,
+        "unrelated_subject_preserved": true
+      }
+    },
+    {
+      "all_expected_observations": true,
+      "case": "12-restore-barrier-and-stale-replay",
+      "checks": {
+        "action_count:deletion_ledger_applied_before_serving": true,
+        "action_decisions:identical_upsert_replay": true,
+        "action_decisions:new_id_stale_upsert_replay": true,
+        "applied_deletes": true,
+        "inspected_storage_clean": true,
+        "observation:after_restore_barrier": true,
+        "query_clean": true,
+        "receipt_completed": true,
+        "target_present_in_both_initial_stores": true,
+        "tombstones": true,
+        "unrelated_subject_survives_every_observation": true
+      },
+      "description": "Reapply the authoritative deletion ledger before serving the restored store, then replay an old copy.",
+      "final": {
+        "applied_deletes": 1,
+        "audit_retains_canary": false,
+        "derived_query_visible": false,
+        "inspected_storage_clean": true,
+        "logical_tick": 6,
+        "main_query_visible": false,
+        "outbox_retains_canary": false,
+        "pending_outbox": 0,
+        "query_clean": true,
+        "raw_sqlite_files_containing_canary": [],
+        "receipt_completed": true,
+        "request_statuses": [
+          "completed"
+        ],
+        "snapshot_query_visible": {
+          "snapshot_a.sqlite": false,
+          "snapshot_b.sqlite": false
+        },
+        "snapshot_retains_canary": false,
+        "stage": "deadline_inspection",
+        "tombstones": 1,
+        "unrelated_subject_preserved": true
+      }
+    },
+    {
+      "all_expected_observations": true,
+      "case": "13-rollback-before-commit-and-retry",
+      "checks": {
+        "action_count:delivery_failed_before_commit": true,
+        "action_count:delivery_result": true,
+        "applied_deletes": true,
+        "inspected_storage_clean": true,
+        "observation:after_delivery_2": true,
+        "pending_outbox": true,
+        "query_clean": true,
+        "receipt_completed": true,
+        "target_present_in_both_initial_stores": true,
+        "tombstones": true,
+        "unrelated_subject_survives_every_observation": true
+      },
+      "description": "Inject an exception after derived SQL mutations but before commit; retry the persistent outbox event.",
+      "final": {
+        "applied_deletes": 1,
+        "audit_retains_canary": false,
+        "derived_query_visible": false,
+        "inspected_storage_clean": true,
+        "logical_tick": 6,
+        "main_query_visible": false,
+        "outbox_retains_canary": false,
+        "pending_outbox": 0,
+        "query_clean": true,
+        "raw_sqlite_files_containing_canary": [],
+        "receipt_completed": true,
+        "request_statuses": [
+          "completed"
+        ],
+        "snapshot_query_visible": {
+          "snapshot_a.sqlite": false,
+          "snapshot_b.sqlite": false
+        },
+        "snapshot_retains_canary": false,
+        "stage": "deadline_inspection",
+        "tombstones": 1,
+        "unrelated_subject_preserved": true
+      }
+    },
+    {
+      "all_expected_observations": true,
+      "case": "14-conflicting-id-reuse",
+      "checks": {
+        "action_count:conflicting_event_rejected": true,
+        "action_count:conflicting_request_rejected": true,
+        "applied_deletes": true,
+        "inspected_storage_clean": true,
+        "query_clean": true,
+        "receipt_completed": true,
+        "target_present_in_both_initial_stores": true,
+        "unrelated_subject_preserved": true,
+        "unrelated_subject_survives_every_observation": true
+      },
+      "description": "Reject a request ID and an event ID reused with a different subject; preserve the unrelated subject.",
+      "final": {
+        "applied_deletes": 1,
+        "audit_retains_canary": false,
+        "derived_query_visible": false,
+        "inspected_storage_clean": true,
+        "logical_tick": 6,
+        "main_query_visible": false,
+        "outbox_retains_canary": false,
+        "pending_outbox": 0,
+        "query_clean": true,
+        "raw_sqlite_files_containing_canary": [],
+        "receipt_completed": true,
+        "request_statuses": [
+          "completed"
+        ],
+        "snapshot_query_visible": {
+          "snapshot_a.sqlite": false,
+          "snapshot_b.sqlite": false
+        },
+        "snapshot_retains_canary": false,
+        "stage": "deadline_inspection",
+        "tombstones": 1,
+        "unrelated_subject_preserved": true
+      }
+    }
+  ],
+  "source_sha256": "33f12f1c619cd9c78edf068c137731238859397e6f471cb84d05d59b20d8f089",
+  "sqlite": "3.51.3"
+}

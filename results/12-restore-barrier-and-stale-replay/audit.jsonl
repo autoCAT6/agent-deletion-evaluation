@@ -1,0 +1,9 @@
+{"action":"initial_copy","event_id":"upsert-target-v1","subject":"synthetic-subject-delete","tick":0}
+{"action":"initial_copy","event_id":"upsert-other-v1","subject":"synthetic-subject-keep","tick":0}
+{"action":"delete_requested","duplicate":false,"request_id":"r-delete-target","status":"accepted","tick":1}
+{"action":"delivery_result","decision":"deleted","event_id":"delete-r-delete-target","tick":2}
+{"action":"derived_snapshot_restored","tick":4}
+{"action":"deletion_ledger_applied_before_serving","tick":4}
+{"action":"identical_upsert_replay","decision":"duplicate","tick":5}
+{"action":"new_id_stale_upsert_replay","decision":"blocked_by_tombstone","tick":5}
+{"action":"snapshot_retention_deadline_applied","tick":6}

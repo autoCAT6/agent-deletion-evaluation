@@ -1,0 +1,135 @@
+[
+  {
+    "applied_deletes": 0,
+    "audit_retains_canary": false,
+    "derived_query_visible": true,
+    "inspected_storage_clean": false,
+    "logical_tick": 0,
+    "main_query_visible": true,
+    "outbox_retains_canary": false,
+    "pending_outbox": 0,
+    "query_clean": false,
+    "raw_sqlite_files_containing_canary": [
+      "agent_a.sqlite",
+      "agent_b.sqlite",
+      "snapshot_a.sqlite",
+      "snapshot_b.sqlite"
+    ],
+    "receipt_completed": false,
+    "request_statuses": [],
+    "snapshot_query_visible": {
+      "snapshot_a.sqlite": true,
+      "snapshot_b.sqlite": true
+    },
+    "snapshot_retains_canary": true,
+    "stage": "before_request",
+    "tombstones": 0,
+    "unrelated_subject_preserved": true
+  },
+  {
+    "applied_deletes": 0,
+    "audit_retains_canary": false,
+    "derived_query_visible": true,
+    "inspected_storage_clean": false,
+    "logical_tick": 1,
+    "main_query_visible": false,
+    "outbox_retains_canary": false,
+    "pending_outbox": 1,
+    "query_clean": false,
+    "raw_sqlite_files_containing_canary": [
+      "agent_b.sqlite",
+      "snapshot_a.sqlite",
+      "snapshot_b.sqlite"
+    ],
+    "receipt_completed": false,
+    "request_statuses": [
+      "accepted"
+    ],
+    "snapshot_query_visible": {
+      "snapshot_a.sqlite": true,
+      "snapshot_b.sqlite": true
+    },
+    "snapshot_retains_canary": true,
+    "stage": "after_receipt",
+    "tombstones": 0,
+    "unrelated_subject_preserved": true
+  },
+  {
+    "applied_deletes": 1,
+    "audit_retains_canary": false,
+    "derived_query_visible": false,
+    "inspected_storage_clean": false,
+    "logical_tick": 2,
+    "main_query_visible": false,
+    "outbox_retains_canary": false,
+    "pending_outbox": 1,
+    "query_clean": true,
+    "raw_sqlite_files_containing_canary": [
+      "snapshot_a.sqlite",
+      "snapshot_b.sqlite"
+    ],
+    "receipt_completed": false,
+    "request_statuses": [
+      "accepted"
+    ],
+    "snapshot_query_visible": {
+      "snapshot_a.sqlite": true,
+      "snapshot_b.sqlite": true
+    },
+    "snapshot_retains_canary": true,
+    "stage": "after_delivery_2",
+    "tombstones": 1,
+    "unrelated_subject_preserved": true
+  },
+  {
+    "applied_deletes": 1,
+    "audit_retains_canary": false,
+    "derived_query_visible": false,
+    "inspected_storage_clean": false,
+    "logical_tick": 3,
+    "main_query_visible": false,
+    "outbox_retains_canary": false,
+    "pending_outbox": 0,
+    "query_clean": true,
+    "raw_sqlite_files_containing_canary": [
+      "snapshot_a.sqlite",
+      "snapshot_b.sqlite"
+    ],
+    "receipt_completed": true,
+    "request_statuses": [
+      "completed"
+    ],
+    "snapshot_query_visible": {
+      "snapshot_a.sqlite": true,
+      "snapshot_b.sqlite": true
+    },
+    "snapshot_retains_canary": true,
+    "stage": "after_delivery_3",
+    "tombstones": 1,
+    "unrelated_subject_preserved": true
+  },
+  {
+    "applied_deletes": 1,
+    "audit_retains_canary": false,
+    "derived_query_visible": false,
+    "inspected_storage_clean": true,
+    "logical_tick": 6,
+    "main_query_visible": false,
+    "outbox_retains_canary": false,
+    "pending_outbox": 0,
+    "query_clean": true,
+    "raw_sqlite_files_containing_canary": [],
+    "receipt_completed": true,
+    "request_statuses": [
+      "completed"
+    ],
+    "snapshot_query_visible": {
+      "snapshot_a.sqlite": false,
+      "snapshot_b.sqlite": false
+    },
+    "snapshot_retains_canary": false,
+    "stage": "deadline_inspection",
+    "tombstones": 1,
+    "unrelated_subject_preserved": true
+  }
+]

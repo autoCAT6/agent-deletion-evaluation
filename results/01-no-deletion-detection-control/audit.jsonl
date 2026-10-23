@@ -1,0 +1,3 @@
+{"action":"initial_copy","event_id":"upsert-target-v1","subject":"synthetic-subject-delete","tick":0}
+{"action":"initial_copy","event_id":"upsert-other-v1","subject":"synthetic-subject-keep","tick":0}
+{"action":"snapshot_retention_deadline_applied","tick":6}

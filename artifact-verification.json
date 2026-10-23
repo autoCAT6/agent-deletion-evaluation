@@ -1,0 +1,91 @@
+{
+  "all_durable_state_checks_passed": true,
+  "case_count": 14,
+  "cases": [
+    {
+      "case": "01-no-deletion-detection-control",
+      "durable_state_matches": true,
+      "inspected_storage_clean": false,
+      "query_clean": false
+    },
+    {
+      "case": "02-premature-completion",
+      "durable_state_matches": true,
+      "inspected_storage_clean": false,
+      "query_clean": false
+    },
+    {
+      "case": "03-pending-delivery-visible",
+      "durable_state_matches": true,
+      "inspected_storage_clean": false,
+      "query_clean": false
+    },
+    {
+      "case": "04-propagation-and-retention-complete",
+      "durable_state_matches": true,
+      "inspected_storage_clean": true,
+      "query_clean": true
+    },
+    {
+      "case": "05-ack-loss-and-retry",
+      "durable_state_matches": true,
+      "inspected_storage_clean": true,
+      "query_clean": true
+    },
+    {
+      "case": "06-duplicate-request-and-delivery",
+      "durable_state_matches": true,
+      "inspected_storage_clean": true,
+      "query_clean": true
+    },
+    {
+      "case": "07-stale-replay-without-tombstone",
+      "durable_state_matches": true,
+      "inspected_storage_clean": false,
+      "query_clean": false
+    },
+    {
+      "case": "08-stale-replay-with-tombstone",
+      "durable_state_matches": true,
+      "inspected_storage_clean": true,
+      "query_clean": true
+    },
+    {
+      "case": "09-snapshot-retained-past-deadline",
+      "durable_state_matches": true,
+      "inspected_storage_clean": false,
+      "query_clean": true
+    },
+    {
+      "case": "10-payload-in-audit-log",
+      "durable_state_matches": true,
+      "inspected_storage_clean": false,
+      "query_clean": true
+    },
+    {
+      "case": "11-unguarded-snapshot-restore",
+      "durable_state_matches": true,
+      "inspected_storage_clean": false,
+      "query_clean": false
+    },
+    {
+      "case": "12-restore-barrier-and-stale-replay",
+      "durable_state_matches": true,
+      "inspected_storage_clean": true,
+      "query_clean": true
+    },
+    {
+      "case": "13-rollback-before-commit-and-retry",
+      "durable_state_matches": true,
+      "inspected_storage_clean": true,
+      "query_clean": true
+    },
+    {
+      "case": "14-conflicting-id-reuse",
+      "durable_state_matches": true,
+      "inspected_storage_clean": true,
+      "query_clean": true
+    }
+  ],
+  "files_hashed": 73
+}

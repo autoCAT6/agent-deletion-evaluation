@@ -1,0 +1,26 @@
+{
+  "taxonomy": {
+    "title": "MLCommons Agent Privacy Risk Taxonomy v0.1",
+    "url": "https://mlcommons.org/wp-content/uploads/2026/10/ML-Commons-Agent-Privacy-Taxonomy-v01-1.pdf",
+    "sha256": "76fd26a98e69253c8fd2f196546a7d7fbfc6a38622c29d9fc51ee30b4d0a9c15",
+    "relevant_pdf_pages_1_based": {
+      "R3.2": [
+        9
+      ],
+      "R1.3": [
+        3,
+        4
+      ],
+      "R5.2": [
+        11,
+        12
+      ],
+      "causal_evidence_boundaries": [
+        12,
+        13
+      ]
+    }
+  },
+  "announcement_url": "https://mlcommons.org/2026/10/agent-privacy-risk-taxonomy-v0-1/",
+  "prepared_for": "Technical feedback; no official benchmark or acceptance claim"
+}

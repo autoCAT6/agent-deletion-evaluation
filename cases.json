@@ -1,0 +1,294 @@
+[
+  {
+    "id": "01-no-deletion-detection-control",
+    "description": "Seed both stores but issue no deletion; observation must detect the target.",
+    "skip_delete": true,
+    "expected_final": {
+      "main_query_visible": true,
+      "derived_query_visible": true,
+      "query_clean": false,
+      "inspected_storage_clean": false,
+      "receipt_completed": false,
+      "applied_deletes": 0
+    }
+  },
+  {
+    "id": "02-premature-completion",
+    "description": "Source declares completion before the downstream deletion is delivered.",
+    "drop_delivery": true,
+    "premature_receipt": true,
+    "expected_final": {
+      "main_query_visible": false,
+      "derived_query_visible": true,
+      "query_clean": false,
+      "inspected_storage_clean": false,
+      "receipt_completed": true,
+      "pending_outbox": 1,
+      "applied_deletes": 0
+    }
+  },
+  {
+    "id": "03-pending-delivery-visible",
+    "description": "Accepted request remains pending when downstream delivery is absent.",
+    "drop_delivery": true,
+    "expected_final": {
+      "main_query_visible": false,
+      "derived_query_visible": true,
+      "query_clean": false,
+      "inspected_storage_clean": false,
+      "receipt_completed": false,
+      "pending_outbox": 1,
+      "applied_deletes": 0
+    }
+  },
+  {
+    "id": "04-propagation-and-retention-complete",
+    "description": "Apply downstream deletion, acknowledge, and expire snapshots at the declared inspection tick.",
+    "expected_final": {
+      "query_clean": true,
+      "inspected_storage_clean": true,
+      "receipt_completed": true,
+      "pending_outbox": 0,
+      "applied_deletes": 1,
+      "tombstones": 1
+    },
+    "expected_observations": [
+      {
+        "stage": "after_receipt",
+        "receipt_completed": false,
+        "derived_query_visible": true
+      },
+      {
+        "stage": "after_delivery_2",
+        "query_clean": true,
+        "receipt_completed": true,
+        "snapshot_retains_canary": true
+      }
+    ]
+  },
+  {
+    "id": "05-ack-loss-and-retry",
+    "description": "Derived deletion commits, delivery acknowledgement is lost, and the queued event is retried.",
+    "lose_ack": true,
+    "expected_final": {
+      "query_clean": true,
+      "inspected_storage_clean": true,
+      "receipt_completed": true,
+      "pending_outbox": 0,
+      "applied_deletes": 1,
+      "tombstones": 1
+    },
+    "expected_actions": {
+      "delivery_result": 2,
+      "delivery_ack_lost": 1
+    },
+    "expected_observations": [
+      {
+        "stage": "after_delivery_2",
+        "query_clean": true,
+        "receipt_completed": false,
+        "pending_outbox": 1,
+        "applied_deletes": 1
+      }
+    ],
+    "expected_action_decisions": {
+      "delivery_result": [
+        "deleted",
+        "duplicate"
+      ]
+    }
+  },
+  {
+    "id": "06-duplicate-request-and-delivery",
+    "description": "Retry the same request and delivery without adding another deletion application.",
+    "duplicate_request": true,
+    "duplicate_delivery": true,
+    "expected_final": {
+      "query_clean": true,
+      "inspected_storage_clean": true,
+      "receipt_completed": true,
+      "applied_deletes": 1,
+      "tombstones": 1
+    },
+    "expected_actions": {
+      "delete_retried": 1,
+      "delivery_result": 1,
+      "duplicate_delivery_result": 1
+    },
+    "expected_action_decisions": {
+      "duplicate_delivery_result": [
+        "duplicate"
+      ]
+    }
+  },
+  {
+    "id": "07-stale-replay-without-tombstone",
+    "description": "A delayed version-1 copy with a new event ID restores the deleted derived value.",
+    "tombstone": false,
+    "stale_replay": true,
+    "expected_final": {
+      "main_query_visible": false,
+      "derived_query_visible": true,
+      "query_clean": false,
+      "inspected_storage_clean": false,
+      "receipt_completed": true,
+      "applied_deletes": 1,
+      "tombstones": 0
+    },
+    "expected_observations": [
+      {
+        "stage": "after_delivery_3",
+        "query_clean": true
+      },
+      {
+        "stage": "after_stale_replay",
+        "derived_query_visible": true
+      }
+    ],
+    "expected_action_decisions": {
+      "identical_upsert_replay": [
+        "duplicate"
+      ],
+      "new_id_stale_upsert_replay": [
+        "stored"
+      ]
+    }
+  },
+  {
+    "id": "08-stale-replay-with-tombstone",
+    "description": "The deletion revision rejects an old copy even when it has a new event ID.",
+    "stale_replay": true,
+    "expected_final": {
+      "query_clean": true,
+      "inspected_storage_clean": true,
+      "receipt_completed": true,
+      "applied_deletes": 1,
+      "tombstones": 1
+    },
+    "expected_actions": {
+      "identical_upsert_replay": 1,
+      "new_id_stale_upsert_replay": 1
+    },
+    "expected_action_decisions": {
+      "identical_upsert_replay": [
+        "duplicate"
+      ],
+      "new_id_stale_upsert_replay": [
+        "blocked_by_tombstone"
+      ]
+    }
+  },
+  {
+    "id": "09-snapshot-retained-past-deadline",
+    "description": "Live queries are clean but both persisted snapshots remain readable past the fixture deadline.",
+    "retain_snapshots": true,
+    "expected_final": {
+      "query_clean": true,
+      "inspected_storage_clean": false,
+      "snapshot_retains_canary": true,
+      "audit_retains_canary": false,
+      "receipt_completed": true
+    }
+  },
+  {
+    "id": "10-payload-in-audit-log",
+    "description": "Live queries and snapshots are clean but an append-only audit entry still contains the target payload.",
+    "payload_log": true,
+    "expected_final": {
+      "query_clean": true,
+      "inspected_storage_clean": false,
+      "snapshot_retains_canary": false,
+      "audit_retains_canary": true,
+      "receipt_completed": true
+    }
+  },
+  {
+    "id": "11-unguarded-snapshot-restore",
+    "description": "Restoring a derived snapshot also rolls back its tombstone and exposes the old record.",
+    "restore_snapshot": true,
+    "expected_final": {
+      "main_query_visible": false,
+      "derived_query_visible": true,
+      "query_clean": false,
+      "inspected_storage_clean": false,
+      "receipt_completed": true,
+      "tombstones": 0,
+      "applied_deletes": 0
+    }
+  },
+  {
+    "id": "12-restore-barrier-and-stale-replay",
+    "description": "Reapply the authoritative deletion ledger before serving the restored store, then replay an old copy.",
+    "restore_snapshot": true,
+    "restore_guard": true,
+    "stale_replay": true,
+    "expected_final": {
+      "query_clean": true,
+      "inspected_storage_clean": true,
+      "receipt_completed": true,
+      "tombstones": 1,
+      "applied_deletes": 1
+    },
+    "expected_observations": [
+      {
+        "stage": "after_restore_barrier",
+        "query_clean": true
+      }
+    ],
+    "expected_actions": {
+      "deletion_ledger_applied_before_serving": 1
+    },
+    "expected_action_decisions": {
+      "identical_upsert_replay": [
+        "duplicate"
+      ],
+      "new_id_stale_upsert_replay": [
+        "blocked_by_tombstone"
+      ]
+    }
+  },
+  {
+    "id": "13-rollback-before-commit-and-retry",
+    "description": "Inject an exception after derived SQL mutations but before commit; retry the persistent outbox event.",
+    "fail_before_commit": true,
+    "expected_final": {
+      "query_clean": true,
+      "inspected_storage_clean": true,
+      "receipt_completed": true,
+      "pending_outbox": 0,
+      "tombstones": 1,
+      "applied_deletes": 1
+    },
+    "expected_observations": [
+      {
+        "stage": "after_delivery_2",
+        "derived_query_visible": true,
+        "receipt_completed": false,
+        "pending_outbox": 1,
+        "applied_deletes": 0,
+        "tombstones": 0
+      }
+    ],
+    "expected_actions": {
+      "delivery_failed_before_commit": 1,
+      "delivery_result": 1
+    }
+  },
+  {
+    "id": "14-conflicting-id-reuse",
+    "description": "Reject a request ID and an event ID reused with a different subject; preserve the unrelated subject.",
+    "conflicting_request": true,
+    "conflicting_event": true,
+    "expected_final": {
+      "query_clean": true,
+      "inspected_storage_clean": true,
+      "receipt_completed": true,
+      "applied_deletes": 1,
+      "unrelated_subject_preserved": true
+    },
+    "expected_actions": {
+      "conflicting_request_rejected": 1,
+      "conflicting_event_rejected": 1
+    }
+  }
+]

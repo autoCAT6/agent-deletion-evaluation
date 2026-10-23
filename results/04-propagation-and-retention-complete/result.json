@@ -1,0 +1,41 @@
+{
+  "all_expected_observations": true,
+  "case": "04-propagation-and-retention-complete",
+  "checks": {
+    "applied_deletes": true,
+    "inspected_storage_clean": true,
+    "observation:after_delivery_2": true,
+    "observation:after_receipt": true,
+    "pending_outbox": true,
+    "query_clean": true,
+    "receipt_completed": true,
+    "target_present_in_both_initial_stores": true,
+    "tombstones": true,
+    "unrelated_subject_survives_every_observation": true
+  },
+  "description": "Apply downstream deletion, acknowledge, and expire snapshots at the declared inspection tick.",
+  "final": {
+    "applied_deletes": 1,
+    "audit_retains_canary": false,
+    "derived_query_visible": false,
+    "inspected_storage_clean": true,
+    "logical_tick": 6,
+    "main_query_visible": false,
+    "outbox_retains_canary": false,
+    "pending_outbox": 0,
+    "query_clean": true,
+    "raw_sqlite_files_containing_canary": [],
+    "receipt_completed": true,
+    "request_statuses": [
+      "completed"
+    ],
+    "snapshot_query_visible": {
+      "snapshot_a.sqlite": false,
+      "snapshot_b.sqlite": false
+    },
+    "snapshot_retains_canary": false,
+    "stage": "deadline_inspection",
+    "tombstones": 1,
+    "unrelated_subject_preserved": true
+  }
+}

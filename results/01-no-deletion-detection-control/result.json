@@ -1,0 +1,40 @@
+{
+  "all_expected_observations": true,
+  "case": "01-no-deletion-detection-control",
+  "checks": {
+    "applied_deletes": true,
+    "derived_query_visible": true,
+    "inspected_storage_clean": true,
+    "main_query_visible": true,
+    "query_clean": true,
+    "receipt_completed": true,
+    "target_present_in_both_initial_stores": true,
+    "unrelated_subject_survives_every_observation": true
+  },
+  "description": "Seed both stores but issue no deletion; observation must detect the target.",
+  "final": {
+    "applied_deletes": 0,
+    "audit_retains_canary": false,
+    "derived_query_visible": true,
+    "inspected_storage_clean": false,
+    "logical_tick": 6,
+    "main_query_visible": true,
+    "outbox_retains_canary": false,
+    "pending_outbox": 0,
+    "query_clean": false,
+    "raw_sqlite_files_containing_canary": [
+      "agent_a.sqlite",
+      "agent_b.sqlite"
+    ],
+    "receipt_completed": false,
+    "request_statuses": [],
+    "snapshot_query_visible": {
+      "snapshot_a.sqlite": false,
+      "snapshot_b.sqlite": false
+    },
+    "snapshot_retains_canary": false,
+    "stage": "deadline_inspection",
+    "tombstones": 0,
+    "unrelated_subject_preserved": true
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "all_expected_observations": true,
+  "case": "10-payload-in-audit-log",
+  "checks": {
+    "audit_retains_canary": true,
+    "inspected_storage_clean": true,
+    "query_clean": true,
+    "receipt_completed": true,
+    "snapshot_retains_canary": true,
+    "target_present_in_both_initial_stores": true,
+    "unrelated_subject_survives_every_observation": true
+  },
+  "description": "Live queries and snapshots are clean but an append-only audit entry still contains the target payload.",
+  "final": {
+    "applied_deletes": 1,
+    "audit_retains_canary": true,
+    "derived_query_visible": false,
+    "inspected_storage_clean": false,
+    "logical_tick": 6,
+    "main_query_visible": false,
+    "outbox_retains_canary": false,
+    "pending_outbox": 0,
+    "query_clean": true,
+    "raw_sqlite_files_containing_canary": [],
+    "receipt_completed": true,
+    "request_statuses": [
+      "completed"
+    ],
+    "snapshot_query_visible": {
+      "snapshot_a.sqlite": false,
+      "snapshot_b.sqlite": false
+    },
+    "snapshot_retains_canary": false,
+    "stage": "deadline_inspection",
+    "tombstones": 1,
+    "unrelated_subject_preserved": true
+  }
+}
